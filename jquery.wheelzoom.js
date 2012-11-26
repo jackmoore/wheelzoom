@@ -1,15 +1,26 @@
-// Wheelzoom 0.0.1
+// Wheelzoom 0.1.0
 // (c) 2012 jacklmoore.com | license: www.opensource.org/licenses/mit-license.php
 !function($){
 	var transparent = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
 	var defaults = {
 		zoom: 0.10
 	};
-	
+	var mousewheel;
+
+	if ('onmousewheel' in document) { // Webkit/Opera/IE
+		mousewheel = 'onmousewheel';
+	} else if ('onwheel' in document) { // FireFox 17+
+		mousewheel = 'onwheel';
+	}
+
 	$.fn.wheelzoom = function(options){
 		var settings = $.extend({}, defaults, options);
 
-		return $(this).each(function(){
+		if (!mousewheel || !('backgroundSize' in this[0].style)) { // IE8-
+			return this;
+		}
+
+		return this.each(function(){
 			var img = this;
 			var $img = $(img);
 
@@ -39,9 +50,12 @@
 				img.height = img.height || img.naturalHeight;
 				img.src = transparent;
 
-				img.onwheel = img.onmousewheel = function(e) {
+				img[mousewheel] = function (e) {
 					var offsetX;
 					var offsetY;
+					var deltaY;
+
+					if (!e) { return; } // IE8
 
 					e.preventDefault();
 
@@ -54,8 +68,11 @@
 						offsetX = e.pageX - offsetParent.left;
 						offsetY = e.pageY - offsetParent.top;
 					}
-					if (e.wheelDeltaY == null) {
-						e.wheelDeltaY = -e.deltaY;
+
+					if (e.deltaY) { // FireFox 17+
+						deltaY = -e.deltaY;
+					} else if (e.wheelDelta) {
+						deltaY = e.wheelDelta;
 					}
 
 					offsetX -= offsetBorderX + offsetPaddingX;
@@ -70,7 +87,7 @@
 					var bgRatioY = bgCursorY/bgHeight;
 
 					// Update the bg size:
-					if (e.wheelDeltaY > 0) {
+					if (deltaY > 0) {
 						bgWidth += bgWidth*settings.zoom;
 						bgHeight += bgHeight*settings.zoom;
 					} else {
