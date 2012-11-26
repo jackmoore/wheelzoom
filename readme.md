@@ -3,7 +3,7 @@
 A small plugin for zooming IMG elements with the mousewheel/trackpad.  Wheelzoom works by scaling and positioning a background-image, after it sets the IMG element's src to a transparent png.  Wheelzoom doesn't add any extra elements to the DOM, or change the positioning of the IMG element.
 
 ## Usage:
-````
+````javascript
 $('img').wheelzoom();
 // or
 $('img').wheelzoom({zoom:0.05});
