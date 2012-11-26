@@ -65,8 +65,14 @@
 						deltaY = -e.wheelDelta;
 					}
 
-					// IE isn't reporting the e.clientX/Y value for e.pageX/Y,
-					// requiring the use of scrollTop/Left to calculate the actual e.pageX/Y values.
+					/*
+						As far as I know, there is no good cross-browser way to get the cursor relative to the event target.
+						To get the relative cursor position we have to calculate the position relative to the document
+						for both the cursor and target element.
+
+						For e.pageX/Y, IE reports the e.clientX/Y value.
+						scrollTop/Left and e.clientX/Y are used to calculate the actual e.pageX/Y value.
+					*/
 					offsetX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - offsetParent.left - offsetBorderX - offsetPaddingX;
 					offsetY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - offsetParent.top - offsetBorderY - offsetPaddingY;
 
