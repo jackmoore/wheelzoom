@@ -10,6 +10,9 @@ $('img').wheelzoom({zoom:0.05});
 // zoom sets the zoom percent.
 ````
 
+## License
+This plugin is licensed under the [MIT License](http://opensource.org/licenses/MIT)
+
 ## Supported Browsers:
 Chrome, Safari, Opera, FireFox 17+, IE9+.
 

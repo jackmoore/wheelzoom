@@ -1,22 +1,23 @@
 // Wheelzoom 0.1.0
 // (c) 2012 jacklmoore.com | license: www.opensource.org/licenses/mit-license.php
 !function($){
-	var transparent = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
+	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
 	var defaults = {
 		zoom: 0.10
 	};
-	var mousewheel;
+	var wheel;
 
-	if ('onmousewheel' in document) { // Webkit/Opera/IE
-		mousewheel = 'onmousewheel';
-	} else if ('onwheel' in document) { // FireFox 17+
-		mousewheel = 'onwheel';
+	if ( document.onmousewheel !== undefined ) { // Webkit/Opera/IE
+		wheel = 'onmousewheel';
+	}
+	else if ( document.onwheel !== undefined) { // FireFox 17+
+		wheel = 'onwheel';
 	}
 
 	$.fn.wheelzoom = function(options){
 		var settings = $.extend({}, defaults, options);
 
-		if (!mousewheel || !('backgroundSize' in this[0].style)) { // IE8-
+		if (!wheel || !('backgroundSize' in this[0].style)) { // IE8-
 			return this;
 		}
 
@@ -48,35 +49,26 @@
 				// as the src is about to be changed to a 1x1 transparent png.
 				img.width = img.width || img.naturalWidth;
 				img.height = img.height || img.naturalHeight;
-				img.src = transparent;
+				img.src = transparentPNG;
 
-				img[mousewheel] = function (e) {
+				img[wheel] = function (e) {
 					var offsetX;
 					var offsetY;
-					var deltaY;
-
-					if (!e) { return; } // IE8
+					var deltaY = 0;
+					var offsetParent = $img.offset();
 
 					e.preventDefault();
 
-					// Normalize
-					if (e.offsetX != null) {
-						offsetX = e.offsetX;
-						offsetY = e.offsetY;
-					} else {
-						var offsetParent = $img.offset();
-						offsetX = e.pageX - offsetParent.left;
-						offsetY = e.pageY - offsetParent.top;
-					}
-
 					if (e.deltaY) { // FireFox 17+
-						deltaY = -e.deltaY;
+						deltaY = e.deltaY;
 					} else if (e.wheelDelta) {
-						deltaY = e.wheelDelta;
+						deltaY = -e.wheelDelta;
 					}
 
-					offsetX -= offsetBorderX + offsetPaddingX;
-					offsetY -= offsetBorderY + offsetPaddingY;
+					// IE isn't reporting the e.clientX/Y value for e.pageX/Y,
+					// requiring the use of scrollTop/Left to calculate the actual e.pageX/Y values.
+					offsetX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - offsetParent.left - offsetBorderX - offsetPaddingX;
+					offsetY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - offsetParent.top - offsetBorderY - offsetPaddingY;
 
 					// Record the offset between the bg edge and cursor:
 					var bgCursorX = offsetX - bgPosX;
@@ -87,7 +79,7 @@
 					var bgRatioY = bgCursorY/bgHeight;
 
 					// Update the bg size:
-					if (deltaY > 0) {
+					if (deltaY < 0) {
 						bgWidth += bgWidth*settings.zoom;
 						bgHeight += bgHeight*settings.zoom;
 					} else {
