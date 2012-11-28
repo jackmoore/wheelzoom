@@ -52,10 +52,7 @@
 				img.src = transparentPNG;
 
 				img[wheel] = function (e) {
-					var offsetX;
-					var offsetY;
 					var deltaY = 0;
-					var offsetParent = $img.offset();
 
 					e.preventDefault();
 
@@ -69,12 +66,10 @@
 						As far as I know, there is no good cross-browser way to get the cursor relative to the event target.
 						To get the relative cursor position we have to calculate the position relative to the document
 						for both the cursor and target element.
-
-						For e.pageX/Y, IE reports the e.clientX/Y value.
-						scrollTop/Left and e.clientX/Y are used to calculate the actual e.pageX/Y value.
 					*/
-					offsetX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - offsetParent.left - offsetBorderX - offsetPaddingX;
-					offsetY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - offsetParent.top - offsetBorderY - offsetPaddingY;
+					var offsetParent = $img.offset();
+					var offsetX = e.pageX - offsetParent.left - offsetBorderX - offsetPaddingX;
+					var offsetY = e.pageY - offsetParent.top - offsetBorderY - offsetPaddingY;
 
 					// Record the offset between the bg edge and cursor:
 					var bgCursorX = offsetX - bgPosX;
@@ -125,10 +120,7 @@
 			if (img.complete) {
 				loaded();
 			} else {
-				$img.on('load.zoom', function(){
-					$img.off('load.zoom');
-					loaded();
-				});
+				$img.one('load', loaded);
 			}
 
 		});
