@@ -1,4 +1,4 @@
-// Wheelzoom 0.1.0
+// Wheelzoom 1.1
 // (c) 2012 jacklmoore.com | license: www.opensource.org/licenses/mit-license.php
 !function($){
 	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
