@@ -32,10 +32,8 @@
 				var bgHeight = height;
 				var bgPosX = 0;
 				var bgPosY = 0;
-
 				var offsetBorderX = parseInt($img.css('border-left-width'),10);
 				var offsetBorderY = parseInt($img.css('border-top-width'),10);
-
 				var offsetPaddingX = parseInt($img.css('padding-left'),10);
 				var offsetPaddingY = parseInt($img.css('padding-top'),10);
 
@@ -44,6 +42,23 @@
 					backgroundSize: width+'px '+height+'px',
 					backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
 				});
+
+				function updateBgStyle() {
+					if (bgPosX > 0) {
+						bgPosX = 0;
+					} else if (bgPosX < width - bgWidth) {
+						bgPosX = width - bgWidth;
+					}
+
+					if (bgPosY > 0) {
+						bgPosY = 0;
+					} else if (bgPosY < height - bgHeight) {
+						bgPosY = height - bgHeight;
+					}
+
+					img.style.backgroundSize = bgWidth + 'px ' + bgHeight + 'px';
+					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
+				}
 
 				// Explicitly set the size to the current dimensions,
 				// as the src is about to be changed to a 1x1 transparent png.
@@ -62,11 +77,9 @@
 						deltaY = -e.wheelDelta;
 					}
 
-					/*
-						As far as I know, there is no good cross-browser way to get the cursor relative to the event target.
-						To get the relative cursor position we have to calculate the position relative to the document
-						for both the cursor and target element.
-					*/
+					// As far as I know, there is no good cross-browser way to get the cursor position relative to the event target.
+					// We have to calculate the target element's position relative to the document, and subtrack that from the
+					// cursor's position relative to the document.
 					var offsetParent = $img.offset();
 					var offsetX = e.pageX - offsetParent.left - offsetBorderX - offsetPaddingX;
 					var offsetY = e.pageY - offsetParent.top - offsetBorderY - offsetPaddingY;
@@ -99,22 +112,29 @@
 						bgPosX = bgPosY = 0;
 					}
 
-					if (bgPosX > 0) {
-						bgPosX = 0;
-					} else if (bgPosX < width - bgWidth) {
-						bgPosX = width - bgWidth;
-					}
-
-					if (bgPosY > 0) {
-						bgPosY = 0;
-					} else if (bgPosY < height - bgHeight) {
-						bgPosY = height - bgHeight;
-					}
-
-					img.style.backgroundSize = bgWidth + 'px ' + bgHeight + 'px';
-					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
+					updateBgStyle();
 				};
 
+				// Make the background draggable
+				img.onmousedown = function(e){
+					var last = e;
+
+					e.preventDefault();
+
+					function drag(e) {
+						e.preventDefault();
+						bgPosX += (e.pageX - last.pageX);
+						bgPosY += (e.pageY - last.pageY);
+						last = e;
+						updateBgStyle();
+					}
+
+					$(document)
+					.on('mousemove', drag)
+					.one('mouseup', function () {
+						$(document).unbind('mousemove', drag);
+					});
+				};
 			}
 
 			if (img.complete) {
