@@ -17,7 +17,7 @@
 	$.fn.wheelzoom = function(options){
 		var settings = $.extend({}, defaults, options);
 
-		if (!wheel || !('backgroundSize' in this[0].style)) { // IE8-
+		if (!this[0] || !wheel || !('backgroundSize' in this[0].style)) { // IE8-
 			return this;
 		}
 
