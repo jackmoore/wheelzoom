@@ -1,4 +1,4 @@
-// Wheelzoom 1.1
+// Wheelzoom 1.1.1
 // (c) 2012 jacklmoore.com | license: www.opensource.org/licenses/mit-license.php
 !function($){
 	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
@@ -22,25 +22,28 @@
 		}
 
 		return this.each(function(){
-			var img = this;
-			var $img = $(img);
+			var img = this,
+				$img = $(img);
 
 			function loaded() {
-				var width = $img.width();
-				var height = $img.height();
-				var bgWidth = width;
-				var bgHeight = height;
-				var bgPosX = 0;
-				var bgPosY = 0;
-				var offsetBorderX = parseInt($img.css('border-left-width'),10);
-				var offsetBorderY = parseInt($img.css('border-top-width'),10);
-				var offsetPaddingX = parseInt($img.css('padding-left'),10);
-				var offsetPaddingY = parseInt($img.css('padding-top'),10);
+				var width = $img.width(),
+					height = $img.height(),
+					bgWidth = width,
+					bgHeight = height,
+					bgPosX = 0,
+					bgPosY = 0,
+					offsetBorderX = parseInt($img.css('border-left-width'),10),
+					offsetBorderY = parseInt($img.css('border-top-width'),10),
+					offsetPaddingX = parseInt($img.css('padding-left'),10),
+					offsetPaddingY = parseInt($img.css('padding-top'),10),
+					resetCSS = {
+						background: "url("+img.src+") 0 0 no-repeat",
+						backgroundSize: width+'px '+height+'px',
+						backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
+					};
 
-				$img.css({
-					background: "url("+img.src+") 0 0 no-repeat",
-					backgroundSize: width+'px '+height+'px',
-					backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
+				$img.css(resetCSS).bind('wheelzoom.reset', function(){
+					$img.css(resetCSS);
 				});
 
 				function updateBgStyle() {
