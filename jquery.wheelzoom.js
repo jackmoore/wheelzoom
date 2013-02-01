@@ -1,4 +1,4 @@
-// Wheelzoom 1.1.1
+// Wheelzoom 1.1.2
 // (c) 2012 jacklmoore.com | license: www.opensource.org/licenses/mit-license.php
 !function($){
 	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
@@ -35,16 +35,14 @@
 					offsetBorderX = parseInt($img.css('border-left-width'),10),
 					offsetBorderY = parseInt($img.css('border-top-width'),10),
 					offsetPaddingX = parseInt($img.css('padding-left'),10),
-					offsetPaddingY = parseInt($img.css('padding-top'),10),
-					resetCSS = {
-						background: "url("+img.src+") 0 0 no-repeat",
-						backgroundSize: width+'px '+height+'px',
-						backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
-					};
+					offsetPaddingY = parseInt($img.css('padding-top'),10);
 
-				$img.css(resetCSS).bind('wheelzoom.reset', function(){
-					$img.css(resetCSS);
-				});
+				function reset() {
+					bgWidth = width;
+					bgHeight = height;
+					bgPosX = bgPosY = 0;
+					updateBgStyle();
+				}
 
 				function updateBgStyle() {
 					if (bgPosX > 0) {
@@ -62,6 +60,13 @@
 					img.style.backgroundSize = bgWidth + 'px ' + bgHeight + 'px';
 					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
 				}
+
+
+				$img.css({
+					background: "url("+img.src+") 0 0 no-repeat",
+					backgroundSize: width+'px '+height+'px',
+					backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
+				}).bind('wheelzoom.reset', reset);
 
 				// Explicitly set the size to the current dimensions,
 				// as the src is about to be changed to a 1x1 transparent png.
@@ -110,12 +115,10 @@
 
 					// Prevent zooming out beyond the starting size
 					if (bgWidth <= width || bgHeight <= height) {
-						bgWidth = width;
-						bgHeight = height;
-						bgPosX = bgPosY = 0;
+						reset();
+					} else {
+						updateBgStyle();
 					}
-
-					updateBgStyle();
 				};
 
 				// Make the background draggable

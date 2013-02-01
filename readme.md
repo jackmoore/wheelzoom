@@ -18,8 +18,14 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
-### v1.1.1 - 2012/11/28
-* Added trigger to unzoom image: `$('#example').trigger('wheelzoom.reset')`
+### v.1.1.2 - 2013/1/31
+* Fixed bug with unzoom trigger.
+
+### v1.1.1 - 2013/1/29
+* Added trigger to unzoom image: 
+````javascript
+	$('#example').trigger('wheelzoom.reset')
+````
 
 ### v1.1.0 - 2012/11/28
 * Added dragging.
