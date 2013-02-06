@@ -59,6 +59,10 @@
 
 					img.style.backgroundSize = bgWidth + 'px ' + bgHeight + 'px';
 					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
+                    if (options && options.callback !== undefined) {
+                        // x, y, w, h in percent
+                        options.callback(-1.0 * bgPosX / bgWidth, -1.0 * bgPosY / bgHeight, 1.0 * width / bgWidth, 1.0 * height / bgHeight);
+                    }
 				}
 
 
@@ -95,7 +99,7 @@
 					// Record the offset between the bg edge and cursor:
 					var bgCursorX = offsetX - bgPosX;
 					var bgCursorY = offsetY - bgPosY;
-					
+
 					// Use the previous offset to get the percent offset between the bg edge and cursor:
 					var bgRatioX = bgCursorX/bgWidth;
 					var bgRatioY = bgCursorY/bgHeight;
