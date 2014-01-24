@@ -116,6 +116,8 @@
 					// Prevent zooming out beyond the starting size
 					if (bgWidth <= width || bgHeight <= height) {
 						reset();
+						//might as well provide a little scrolly scrolly!
+                                                jQuery('body').scrollTop(jQuery(window).scrollTop() + 60);
 					} else {
 						updateBgStyle();
 					}
