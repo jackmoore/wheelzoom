@@ -3,7 +3,10 @@
 !function($){
 	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
 	var defaults = {
-		zoom: 0.10
+		zoom: 0.10,
+		size: 1.0,
+		x: 0.5,
+		y: 0.5
 	};
 	var wheel;
 
@@ -61,11 +64,21 @@
 					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
 				}
 
+				// Set initializer variables
+				bgWidth = bgWidth * settings.size;
+				bgHeight = bgHeight * settings.size;
+				bgPosX = (width/2) - (bgWidth * settings.x);
+				bgPosY = (height/2) - (bgHeight * settings.y);
 
+				// Check if position coord at edge of image
+				bgPosX = bgPosX < 0 ? bgPosX : 0;
+				bgPosY = bgPosY < 0 ? bgPosY : 0;
+
+				// set background image to preset dimesions and position
 				$img.css({
 					background: "url("+img.src+") 0 0 no-repeat",
-					backgroundSize: width+'px '+height+'px',
-					backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
+					backgroundSize: bgWidth+'px ' + bgHeight+'px',
+					backgroundPosition: (bgPosX+offsetPaddingX)+'px ' + (bgPosY+offsetPaddingY)+'px'
 				}).bind('wheelzoom.reset', reset);
 
 				// Explicitly set the size to the current dimensions,
@@ -95,7 +108,7 @@
 					// Record the offset between the bg edge and cursor:
 					var bgCursorX = offsetX - bgPosX;
 					var bgCursorY = offsetY - bgPosY;
-					
+
 					// Use the previous offset to get the percent offset between the bg edge and cursor:
 					var bgRatioX = bgCursorX/bgWidth;
 					var bgRatioY = bgCursorY/bgHeight;
