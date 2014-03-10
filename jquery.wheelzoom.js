@@ -3,7 +3,8 @@
 !function($){
 	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
 	var defaults = {
-		zoom: 0.10
+		zoom: 0.10,
+		maxZoom: 2
 	};
 	var wheel;
 
@@ -32,6 +33,7 @@
 					bgHeight = height,
 					bgPosX = 0,
 					bgPosY = 0,
+					zoomed = false,
 					offsetBorderX = parseInt($img.css('border-left-width'),10),
 					offsetBorderY = parseInt($img.css('border-top-width'),10),
 					offsetPaddingX = parseInt($img.css('padding-left'),10),
@@ -85,6 +87,9 @@
 						deltaY = -e.wheelDelta;
 					}
 
+					if(deltaY < 0 && zoomed) return; // Cancel if zoomed to maxZoom (for ex., 2x) and trying to zoom more
+					zoomed = false;
+
 					// As far as I know, there is no good cross-browser way to get the cursor position relative to the event target.
 					// We have to calculate the target element's position relative to the document, and subtrack that from the
 					// cursor's position relative to the document.
@@ -116,6 +121,8 @@
 					// Prevent zooming out beyond the starting size
 					if (bgWidth <= width || bgHeight <= height) {
 						reset();
+					} else if(bgWidth >= width*settings.maxZoom || bgHeight >= height*settings.maxZoom){
+						zoomed = true;
 					} else {
 						updateBgStyle();
 					}
