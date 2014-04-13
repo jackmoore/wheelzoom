@@ -1,11 +1,28 @@
-// Wheelzoom 1.1.2
-// (c) 2012 jacklmoore.com | license: www.opensource.org/licenses/mit-license.php
+/*!
+	Wheelzoom 1.1.3
+	(c) 2014 Jack Moore - http://www.jacklmoore.com/wheelzoom
+	license: http://www.opensource.org/licenses/mit-license.php
+	dependencies: jQuery 1.9+ or 2.0+
+	supports: modern browsers, and IE9 and up
+*/
 !function($){
-	var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
 	var defaults = {
 		zoom: 0.10
 	};
 	var wheel;
+
+	function setSrcToBackground(img) {
+		var transparentPNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
+
+		// Explicitly set the size to the current dimensions,
+		// as the src is about to be changed to a 1x1 transparent png.
+		img.width = img.width || img.naturalWidth;
+		img.height = img.height || img.naturalHeight;
+
+		img.style.backgroundImage = "url("+img.src+")";
+		img.style.backgroundRepeat = 'no-repeat';
+		img.src = transparentPNG;
+	}
 
 	if ( document.onmousewheel !== undefined ) { // Webkit/Opera/IE
 		wheel = 'onmousewheel';
@@ -17,7 +34,7 @@
 	$.fn.wheelzoom = function(options){
 		var settings = $.extend({}, defaults, options);
 
-		if (!this[0] || !wheel || !('backgroundSize' in this[0].style)) { // IE8-
+		if (!this[0] || !wheel || !('backgroundSize' in this[0].style)) { // do nothing in IE8 and lower
 			return this;
 		}
 
@@ -32,10 +49,18 @@
 					bgHeight = height,
 					bgPosX = 0,
 					bgPosY = 0,
-					offsetBorderX = parseInt($img.css('border-left-width'),10),
-					offsetBorderY = parseInt($img.css('border-top-width'),10),
-					offsetPaddingX = parseInt($img.css('padding-left'),10),
-					offsetPaddingY = parseInt($img.css('padding-top'),10);
+					offsetBorderX = 0,
+					offsetBorderY = 0,
+					offsetPaddingX = 0,
+					offsetPaddingY = 0,
+					style = window.getComputedStyle ? window.getComputedStyle(img, null) : false;
+
+				if (style) {
+					offsetBorderX = parseInt(style.paddingLeft, 10);
+					offsetBorderY = parseInt(style.paddingTop, 10);
+					offsetPaddingX = parseInt(style.borderLeftWidth, 10);
+					offsetPaddingY = parseInt(style.borderTopWidth, 10);
+				}
 
 				function reset() {
 					bgWidth = width;
@@ -61,25 +86,19 @@
 					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
 				}
 
+				setSrcToBackground(img);
 
 				$img.css({
-					background: "url("+img.src+") 0 0 no-repeat",
 					backgroundSize: width+'px '+height+'px',
 					backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
 				}).bind('wheelzoom.reset', reset);
-
-				// Explicitly set the size to the current dimensions,
-				// as the src is about to be changed to a 1x1 transparent png.
-				img.width = img.width || img.naturalWidth;
-				img.height = img.height || img.naturalHeight;
-				img.src = transparentPNG;
 
 				img[wheel] = function (e) {
 					var deltaY = 0;
 
 					e.preventDefault();
 
-					if (e.deltaY) { // FireFox 17+
+					if (e.deltaY) { // FireFox 17+ (IE9+, Chrome 31+?)
 						deltaY = e.deltaY;
 					} else if (e.wheelDelta) {
 						deltaY = -e.wheelDelta;
