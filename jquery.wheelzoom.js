@@ -1,11 +1,11 @@
 /*!
-	Wheelzoom 1.1.3
+	Wheelzoom 2.0.0
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/wheelzoom
 	license: http://www.opensource.org/licenses/mit-license.php
 	dependencies: jQuery 1.9+ or 2.0+
 	supports: modern browsers, and IE9 and up
 */
-!function($){
+(function($){
 	var defaults = {
 		zoom: 0.10
 	};
@@ -16,8 +16,8 @@
 
 		// Explicitly set the size to the current dimensions,
 		// as the src is about to be changed to a 1x1 transparent png.
-		img.width = img.width || img.naturalWidth;
-		img.height = img.height || img.naturalHeight;
+		img.width = img.width;
+		img.height = img.height;
 
 		img.style.backgroundImage = "url("+img.src+")";
 		img.style.backgroundRepeat = 'no-repeat';
@@ -48,19 +48,7 @@
 					bgWidth = width,
 					bgHeight = height,
 					bgPosX = 0,
-					bgPosY = 0,
-					offsetBorderX = 0,
-					offsetBorderY = 0,
-					offsetPaddingX = 0,
-					offsetPaddingY = 0,
-					style = window.getComputedStyle ? window.getComputedStyle(img, null) : false;
-
-				if (style) {
-					offsetBorderX = parseInt(style.paddingLeft, 10);
-					offsetBorderY = parseInt(style.paddingTop, 10);
-					offsetPaddingX = parseInt(style.borderLeftWidth, 10);
-					offsetPaddingY = parseInt(style.borderTopWidth, 10);
-				}
+					bgPosY = 0;
 
 				function reset() {
 					bgWidth = width;
@@ -82,15 +70,15 @@
 						bgPosY = height - bgHeight;
 					}
 
-					img.style.backgroundSize = bgWidth + 'px ' + bgHeight + 'px';
-					img.style.backgroundPosition = (bgPosX+offsetPaddingX) + 'px ' + (bgPosY+offsetPaddingY) + 'px';
+					img.style.backgroundSize = bgWidth+'px '+bgHeight+'px';
+					img.style.backgroundPosition = bgPosX+'px '+bgPosY+'px';
 				}
 
 				setSrcToBackground(img);
 
 				$img.css({
 					backgroundSize: width+'px '+height+'px',
-					backgroundPosition: offsetPaddingX+'px '+offsetPaddingY+'px'
+					backgroundPosition: '0 0'
 				}).bind('wheelzoom.reset', reset);
 
 				img[wheel] = function (e) {
@@ -108,8 +96,8 @@
 					// We have to calculate the target element's position relative to the document, and subtrack that from the
 					// cursor's position relative to the document.
 					var offsetParent = $img.offset();
-					var offsetX = e.pageX - offsetParent.left - offsetBorderX - offsetPaddingX;
-					var offsetY = e.pageY - offsetParent.top - offsetBorderY - offsetPaddingY;
+					var offsetX = e.pageX - offsetParent.left;
+					var offsetY = e.pageY - offsetParent.top;
 
 					// Record the offset between the bg edge and cursor:
 					var bgCursorX = offsetX - bgPosX;
@@ -173,4 +161,4 @@
 
 	$.fn.wheelzoom.defaults = defaults;
 
-}(window.jQuery);
+}(window.jQuery));

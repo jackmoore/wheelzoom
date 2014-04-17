@@ -18,6 +18,12 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+### v.2.0.0 - 2014/4/17
+* Simplified by dropping support for having border and padding on the img element. Borders and/or padding should be applied to the parent element, rather than the img element.
+
+### v.1.1.3 - 2014/4/13
+* Minor code improvement.
+
 ### v.1.1.2 - 2013/1/31
 * Fixed bug with unzoom trigger.
 
