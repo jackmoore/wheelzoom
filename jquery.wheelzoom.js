@@ -1,9 +1,7 @@
 /*!
-	Wheelzoom 2.0.0
-	(c) 2014 Jack Moore - http://www.jacklmoore.com/wheelzoom
-	license: http://www.opensource.org/licenses/mit-license.php
-	dependencies: jQuery 1.9+ or 2.0+
-	supports: modern browsers, and IE9 and up
+	Wheelzoom 2.0.1
+	license: MIT
+	http://www.jacklmoore.com/wheelzoom
 */
 (function($){
 	var defaults = {
