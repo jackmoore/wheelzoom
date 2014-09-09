@@ -19,7 +19,7 @@
 		img.width = img.width;
 		img.height = img.height;
 
-		img.style.backgroundImage = "url("+img.src+")";
+		img.style.backgroundImage = "url('"+img.src+"')";
 		img.style.backgroundRepeat = 'no-repeat';
 		img.src = transparentPNG;
 	}
