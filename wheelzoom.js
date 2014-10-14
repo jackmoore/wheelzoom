@@ -18,7 +18,7 @@ window.wheelzoom = (function(){
 	}
 
 	main = function(img, options){
-		if (!img) { return; }
+		if (!img || !img.nodeName || img.nodeName !== 'IMG') { return; }
 
 		var settings = {};
 		var width;
