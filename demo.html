@@ -2,18 +2,13 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery Wheelzoom</title>
-	<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-	<script src="jquery.wheelzoom.js"></script>
-	<script>
-		$(document).ready(function(){
-			$('img').wheelzoom();
-		});
-	</script>
+	<title>Wheelzoom</title>
 </head>
 <body>
-	<img src='daisy.jpg' alt='Daisy!' width='555' height='320'/>
-	<br/>
-	<img src='daisy.jpg' alt='Daisy!'/>
+	<img class='zoom' src='daisy.jpg' alt='Daisy!' width='555' height='320'/>
+	<script src="wheelzoom.js"></script>
+	<script>
+		wheelzoom(document.querySelector('img.zoom'));
+	</script>
 </body>
 </html>
