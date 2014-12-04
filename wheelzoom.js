@@ -166,14 +166,13 @@ window.wheelzoom = (function(){
 			settings[key] = options[key] !== undefined ? options[key] : defaults[key];
 		});
 
+		function onload() {
+			img.removeEventListener('load', onload);
+			loaded();
+		}
+		img.addEventListener('load', onload);
 		if (img.complete) {
 			loaded();
-		} else {
-			function onload() {
-				img.removeEventListener('load', onload);
-				loaded();
-			}
-			img.addEventListener('load', onload);
 		}
 	};
 
