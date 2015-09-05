@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 3.0.0
+	Wheelzoom 3.0.1
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
@@ -7,14 +7,14 @@ window.wheelzoom = (function(){
 	var defaults = {
 		zoom: 0.10
 	};
-	var canvas = document.createElement('canvas');
+	var transparent = document.createElement('canvas').toDataUrl();
 
 	function setSrcToBackground(img) {
-		img.style.backgroundImage = "url('"+img.src+"')";
+		img.style.backgroundImage = 'url("'+img.src+'")';
 		img.style.backgroundRepeat = 'no-repeat';
 		canvas.width = img.naturalWidth;
 		canvas.height = img.naturalHeight;
-		img.src = canvas.toDataURL();
+		img.src = transparent;
 	}
 
 	main = function(img, options){

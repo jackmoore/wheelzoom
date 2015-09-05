@@ -18,6 +18,9 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+##### v.3.0.1 - 2015/09/05
+* Fixed issue with src URLs that contain single quotes. Fixes #13.
+
 ##### v.3.0.0 - 2014/10/14
 * Removed jQuery dependency
 * Added 'wheelzoom.destroy' event for removing changes that wheelzoom has made to an element.
