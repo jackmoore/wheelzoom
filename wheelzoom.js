@@ -7,17 +7,18 @@ window.wheelzoom = (function(){
 	var defaults = {
 		zoom: 0.10
 	};
-	var transparent = document.createElement('canvas').toDataUrl();
+
+	var canvas = document.createElement('canvas');
 
 	function setSrcToBackground(img) {
 		img.style.backgroundImage = 'url("'+img.src+'")';
 		img.style.backgroundRepeat = 'no-repeat';
 		canvas.width = img.naturalWidth;
 		canvas.height = img.naturalHeight;
-		img.src = transparent;
+		img.src = canvas.toDataURL();
 	}
 
-	main = function(img, options){
+	var main = function(img, options){
 		if (!img || !img.nodeName || img.nodeName !== 'IMG') { return; }
 
 		var settings = {};
@@ -169,11 +170,10 @@ window.wheelzoom = (function(){
 		if (img.complete) {
 			loaded();
 		} else {
-			function onload() {
+			img.addEventListener('load', function onload() {
 				img.removeEventListener('load', onload);
 				loaded();
-			}
-			img.addEventListener('load', onload);
+			});
 		}
 	};
 
@@ -181,7 +181,7 @@ window.wheelzoom = (function(){
 	if (typeof window.getComputedStyle !== 'function') {
 		return function(elements) {
 			return elements;
-		}
+		};
 	} else {
 		return function(elements, options) {
 			if (elements && elements.length) {
@@ -190,6 +190,6 @@ window.wheelzoom = (function(){
 				main(elements, options);
 			}
 			return elements;
-		}
+		};
 	}
 }());

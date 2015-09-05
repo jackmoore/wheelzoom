@@ -18,6 +18,9 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+##### v.3.0.2 - 2015/09/05
+* Fixed lint warnings and bug introduced in 3.0.1
+
 ##### v.3.0.1 - 2015/09/05
 * Fixed issue with src URLs that contain single quotes. Fixes #13.
 
