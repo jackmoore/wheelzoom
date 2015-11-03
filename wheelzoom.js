@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 3.0.1
+	Wheelzoom 3.0.3
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
@@ -69,8 +69,8 @@ window.wheelzoom = (function(){
 			// We have to calculate the target element's position relative to the document, and subtrack that from the
 			// cursor's position relative to the document.
 			var rect = img.getBoundingClientRect();
-			var offsetX = e.pageX - rect.left - document.body.scrollLeft;
-			var offsetY = e.pageY - rect.top - document.body.scrollTop;
+			var offsetX = e.pageX - rect.left - window.pageXOffset;
+			var offsetY = e.pageY - rect.top - window.pageYOffset;
 
 			// Record the offset between the bg edge and cursor:
 			var bgCursorX = offsetX - bgPosX;
@@ -142,9 +142,8 @@ window.wheelzoom = (function(){
 			img.addEventListener('mousedown', draggable);
 		}
 
-		img.addEventListener('wheelzoom.destroy', function (originalProperties) {
-			console.log(originalProperties);
-			img.removeEventListener('wheelzoom.destroy');
+		var destroy = function (originalProperties) {
+			img.removeEventListener('wheelzoom.destroy', destroy);
 			img.removeEventListener('wheelzoom.reset', reset);
 			img.removeEventListener('load', onload);
 			img.removeEventListener('mouseup', removeDrag);
@@ -159,7 +158,9 @@ window.wheelzoom = (function(){
 			backgroundImage: img.style.backgroundImage,
 			backgroundRepeat: img.style.backgroundRepeat,
 			src: img.src
-		}));
+		});
+
+		img.addEventListener('wheelzoom.destroy', destroy);
 
 		options = options || {};
 
