@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 3.0.3
+	Wheelzoom 3.0.4
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
@@ -9,14 +9,6 @@ window.wheelzoom = (function(){
 	};
 
 	var canvas = document.createElement('canvas');
-
-	function setSrcToBackground(img) {
-		img.style.backgroundImage = 'url("'+img.src+'")';
-		img.style.backgroundRepeat = 'no-repeat';
-		canvas.width = img.naturalWidth;
-		canvas.height = img.naturalHeight;
-		img.src = canvas.toDataURL();
-	}
 
 	var main = function(img, options){
 		if (!img || !img.nodeName || img.nodeName !== 'IMG') { return; }
@@ -29,6 +21,16 @@ window.wheelzoom = (function(){
 		var bgPosX;
 		var bgPosY;
 		var previousEvent;
+		var cachedDataUrl;
+
+		function setSrcToBackground(img) {
+			img.style.backgroundImage = 'url("'+img.src+'")';
+			img.style.backgroundRepeat = 'no-repeat';
+			canvas.width = img.naturalWidth;
+			canvas.height = img.naturalHeight;
+			cachedDataUrl = canvas.toDataURL();
+			img.src = cachedDataUrl;
+		}
 
 		function updateBgStyle() {
 			if (bgPosX > 0) {
@@ -122,7 +124,9 @@ window.wheelzoom = (function(){
 			document.addEventListener('mouseup', removeDrag);
 		}
 
-		function loaded() {
+		function load() {
+			if (img.src === cachedDataUrl) return;
+
 			var computedStyle = window.getComputedStyle(img, null);
 
 			width = parseInt(computedStyle.width, 10);
@@ -145,7 +149,7 @@ window.wheelzoom = (function(){
 		var destroy = function (originalProperties) {
 			img.removeEventListener('wheelzoom.destroy', destroy);
 			img.removeEventListener('wheelzoom.reset', reset);
-			img.removeEventListener('load', onload);
+			img.removeEventListener('load', load);
 			img.removeEventListener('mouseup', removeDrag);
 			img.removeEventListener('mousemove', drag);
 			img.removeEventListener('mousedown', draggable);
@@ -169,13 +173,10 @@ window.wheelzoom = (function(){
 		});
 
 		if (img.complete) {
-			loaded();
-		} else {
-			img.addEventListener('load', function onload() {
-				img.removeEventListener('load', onload);
-				loaded();
-			});
+			load();
 		}
+
+		img.addEventListener('load', load);
 	};
 
 	// Do nothing in IE8
