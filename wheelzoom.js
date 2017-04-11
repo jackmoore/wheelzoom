@@ -1,11 +1,12 @@
 /*!
-	Wheelzoom 3.0.4
+	Wheelzoom 3.1.0
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
 window.wheelzoom = (function(){
 	var defaults = {
-		zoom: 0.10
+		zoom: 0.10,
+		maxZoom: false,
 	};
 
 	var canvas = document.createElement('canvas');
@@ -89,6 +90,11 @@ window.wheelzoom = (function(){
 			} else {
 				bgWidth -= bgWidth*settings.zoom;
 				bgHeight -= bgHeight*settings.zoom;
+			}
+
+			if (settings.maxZoom) {
+				bgWidth = Math.min(width*settings.maxZoom, bgWidth);
+				bgHeight = Math.min(height*settings.maxZoom, bgHeight);
 			}
 
 			// Take the percent offset and apply it to the new size:
