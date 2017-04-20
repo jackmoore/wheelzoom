@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 3.1.0
+	Wheelzoom 3.1.2
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
