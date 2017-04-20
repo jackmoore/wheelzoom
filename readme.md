@@ -18,6 +18,9 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+##### v.3.1.1 - 2017/04/20
+* Added package.json & added to NPM.
+
 ##### v.3.1.0 - 2017/04/10
 * Added 'maxZoom' option for maximum zoom level.
 
