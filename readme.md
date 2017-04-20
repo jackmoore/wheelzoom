@@ -18,6 +18,12 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+##### v.3.1.0 - 2017/04/10
+* Added 'maxZoom' option for maximum zoom level.
+
+##### v.3.0.4 - 2015/12/15
+* Automatically account for changes to the img src, to avoid requiring manually calling destroy and reapply.
+
 ##### v.3.0.3 - 2015/09/05
 * Fixed zoom positioning issue in Firefox.  Fixes #17
 * Fixed error when calling destroy in Firefox.  Fixes #16
