@@ -1,0 +1,23 @@
+{
+	"name": "wheelzoom",
+	"description": "Zoom IMG elements on mousewheel or touchpad scroll.",
+	"version": "3.1.0",
+	"keywords": [
+		"zoom",
+		"images",
+		"ui"
+	],
+	"author": {
+		"name": "Jack Moore",
+		"url": "http://www.jacklmoore.com",
+		"email": "hello@jacklmoore.com"
+	},
+	"main": "wheelzoom.js",
+	"license": "MIT",
+	"homepage": "http://www.jacklmoore.com/wheelzoom",
+	"demo": "http://www.jacklmoore.com/wheelzoom",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/jackmoore/wheelzoom.git"
+	}
+}
