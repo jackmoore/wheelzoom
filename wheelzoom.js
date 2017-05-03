@@ -57,6 +57,11 @@ window.wheelzoom = (function(){
 			updateBgStyle();
 		}
 
+		function centerBg() {
+			bgPosX = -(bgWidth - width) / 2;
+			bgPosY = -(bgHeight - height) / 2;
+		}
+
 		function onwheel(e) {
 			var deltaY = 0;
 
@@ -109,6 +114,37 @@ window.wheelzoom = (function(){
 			}
 		}
 
+		function zoomIn() {
+			bgWidth += bgWidth*settings.zoom;
+			bgHeight += bgHeight*settings.zoom;
+
+			centerBg();
+
+			// Prevent zooming in beyond the max size
+			if (settings.maxZoom) {
+				bgWidth = Math.min(width*settings.maxZoom, bgWidth);
+				bgHeight = Math.min(height*settings.maxZoom, bgHeight);
+
+				centerBg();
+			}
+
+			updateBgStyle();
+		}
+
+		function zoomOut() {
+			bgWidth -= bgWidth*settings.zoom;
+			bgHeight -= bgHeight*settings.zoom;
+			
+			centerBg();
+			
+			// Prevent zooming out beyond the starting size
+			if (bgWidth <= width || bgHeight <= height) {
+				reset();
+			} else {
+				updateBgStyle();
+			}
+		}
+
 		function drag(e) {
 			e.preventDefault();
 			bgPosX += (e.pageX - previousEvent.pageX);
@@ -150,6 +186,9 @@ window.wheelzoom = (function(){
 
 			img.addEventListener('wheel', onwheel);
 			img.addEventListener('mousedown', draggable);
+
+			img.addEventListener('zoomin', zoomIn);
+			img.addEventListener('zoomout', zoomOut);
 		}
 
 		var destroy = function (originalProperties) {
@@ -160,6 +199,8 @@ window.wheelzoom = (function(){
 			img.removeEventListener('mousemove', drag);
 			img.removeEventListener('mousedown', draggable);
 			img.removeEventListener('wheel', onwheel);
+			img.removeEventListener('zoomin', zoomIn);
+			img.removeEventListener('zoomout', zoomOut);
 
 			img.style.backgroundImage = originalProperties.backgroundImage;
 			img.style.backgroundRepeat = originalProperties.backgroundRepeat;
