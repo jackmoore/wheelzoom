@@ -18,6 +18,9 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+##### v.3.1.3 - 2018/01/31
+* Added 'initialZoom' option. Resolves #32
+
 ##### v.3.1.2 - 2017/04/20
 * Added package.json & added to NPM.
 

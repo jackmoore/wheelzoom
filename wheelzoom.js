@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 3.1.2
+	Wheelzoom 3.1.3
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
@@ -7,6 +7,7 @@ window.wheelzoom = (function(){
 	var defaults = {
 		zoom: 0.10,
 		maxZoom: false,
+		initialZoom: 1,
 	};
 
 	var canvas = document.createElement('canvas');
@@ -131,21 +132,23 @@ window.wheelzoom = (function(){
 		}
 
 		function load() {
+			var initial = Math.max(settings.initialZoom, 1);
+
 			if (img.src === cachedDataUrl) return;
 
 			var computedStyle = window.getComputedStyle(img, null);
 
 			width = parseInt(computedStyle.width, 10);
 			height = parseInt(computedStyle.height, 10);
-			bgWidth = width;
-			bgHeight = height;
-			bgPosX = 0;
-			bgPosY = 0;
+			bgWidth = width * initial;
+			bgHeight = height * initial;
+			bgPosX = -(bgWidth - width)/2;
+			bgPosY = -(bgHeight - height)/2;;
 
 			setSrcToBackground(img);
 
-			img.style.backgroundSize =  width+'px '+height+'px';
-			img.style.backgroundPosition = '0 0';
+			img.style.backgroundSize = bgWidth+'px '+bgHeight+'px';
+			img.style.backgroundPosition = bgPosX+'px '+bgPosY+'px';
 			img.addEventListener('wheelzoom.reset', reset);
 
 			img.addEventListener('wheel', onwheel);
