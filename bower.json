@@ -1,0 +1,21 @@
+{
+  "name": "wheelzoom",
+  "main": "wheelzoom.js",
+  "homepage": "https://github.com/jackmoore/wheelzoom",
+  "description": "Enlarge images on mouse wheel scrolling.",
+  "keywords": [
+    "zoom",
+    "image",
+    "wheel",
+    "scroll",
+    "mouse"
+  ],
+  "authors": [
+    {
+      "name": "Jack Moore",
+      "url": "http://www.jacklmoore.com",
+      "email": "hello@jacklmoore.com"
+    }
+  ],
+  "license": "MIT"
+}
