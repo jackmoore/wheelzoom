@@ -1,7 +1,7 @@
 /*!
-	Wheelzoom 3.1.3
-	license: MIT
-	http://www.jacklmoore.com/wheelzoom
+  Wheelzoom 3.1.4
+  license: MIT
+  http://www.jacklmoore.com/wheelzoom
 */
 (function() {
   var wheelzoom = (function() {
