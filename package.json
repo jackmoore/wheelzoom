@@ -8,7 +8,7 @@
     "url": "http://www.jacklmoore.com",
     "email": "hello@jacklmoore.com"
   },
-  "main": "wheelzoom.js",
+  "main": "index.js",
   "license": "MIT",
   "homepage": "http://www.jacklmoore.com/wheelzoom",
   "demo": "http://www.jacklmoore.com/wheelzoom",
