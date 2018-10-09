@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 3.1.3
+	Wheelzoom 4.0.0
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
@@ -184,8 +184,8 @@ window.wheelzoom = (function(){
 		img.addEventListener('load', load);
 	};
 
-	// Do nothing in IE8
-	if (typeof window.getComputedStyle !== 'function') {
+	// Do nothing in IE9 or below
+	if (typeof window.btoa !== 'function') {
 		return function(elements) {
 			return elements;
 		};
