@@ -10,8 +10,6 @@ window.wheelzoom = (function(){
 		initialZoom: 1,
 	};
 
-	var canvas = document.createElement('canvas');
-
 	var main = function(img, options){
 		if (!img || !img.nodeName || img.nodeName !== 'IMG') { return; }
 
@@ -26,11 +24,9 @@ window.wheelzoom = (function(){
 		var cachedDataUrl;
 
 		function setSrcToBackground(img) {
-			img.style.backgroundImage = 'url("'+img.src+'")';
 			img.style.backgroundRepeat = 'no-repeat';
-			canvas.width = img.naturalWidth;
-			canvas.height = img.naturalHeight;
-			cachedDataUrl = canvas.toDataURL();
+			img.style.backgroundImage = 'url("'+img.src+'")';
+			cachedDataUrl = 'data:image/svg+xml;base64,'+window.btoa('<svg xmlns="http://www.w3.org/2000/svg" width="'+img.naturalWidth+'" height="'+img.naturalHeight+'"></svg>');
 			img.src = cachedDataUrl;
 		}
 
