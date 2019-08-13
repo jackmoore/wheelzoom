@@ -1,5 +1,5 @@
 /*!
-	Wheelzoom 4.0.0
+	Wheelzoom 4.0.1
 	license: MIT
 	http://www.jacklmoore.com/wheelzoom
 */
@@ -8,6 +8,8 @@ window.wheelzoom = (function(){
 		zoom: 0.10,
 		maxZoom: false,
 		initialZoom: 1,
+		initialX: 0.5,
+		initialY: 0.5,
 	};
 
 	var main = function(img, options){
@@ -21,13 +23,13 @@ window.wheelzoom = (function(){
 		var bgPosX;
 		var bgPosY;
 		var previousEvent;
-		var cachedDataUrl;
+		var transparentSpaceFiller;
 
 		function setSrcToBackground(img) {
 			img.style.backgroundRepeat = 'no-repeat';
 			img.style.backgroundImage = 'url("'+img.src+'")';
-			cachedDataUrl = 'data:image/svg+xml;base64,'+window.btoa('<svg xmlns="http://www.w3.org/2000/svg" width="'+img.naturalWidth+'" height="'+img.naturalHeight+'"></svg>');
-			img.src = cachedDataUrl;
+			transparentSpaceFiller = 'data:image/svg+xml;base64,'+window.btoa('<svg xmlns="http://www.w3.org/2000/svg" width="'+img.naturalWidth+'" height="'+img.naturalHeight+'"></svg>');
+			img.src = transparentSpaceFiller;
 		}
 
 		function updateBgStyle() {
@@ -130,7 +132,7 @@ window.wheelzoom = (function(){
 		function load() {
 			var initial = Math.max(settings.initialZoom, 1);
 
-			if (img.src === cachedDataUrl) return;
+			if (img.src === transparentSpaceFiller) return;
 
 			var computedStyle = window.getComputedStyle(img, null);
 
@@ -138,8 +140,8 @@ window.wheelzoom = (function(){
 			height = parseInt(computedStyle.height, 10);
 			bgWidth = width * initial;
 			bgHeight = height * initial;
-			bgPosX = -(bgWidth - width)/2;
-			bgPosY = -(bgHeight - height)/2;;
+			bgPosX = -(bgWidth - width) * settings.initialX;
+			bgPosY = -(bgHeight - height) * settings.initialY;
 
 			setSrcToBackground(img);
 

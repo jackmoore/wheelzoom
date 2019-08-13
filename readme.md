@@ -18,6 +18,9 @@ Chrome, Safari, Opera, FireFox 17+, IE9+.
 
 ## Changelog:
 
+##### v.4.0.1 - 2019/08/13
+* Added initialX and initialY for setting the initial zoomed coordinates
+
 ##### v.4.0.0 - 2018/10/09
 * Replaced canvas data URI with base64 svg for creating placeholder
 * Dropped IE9 support

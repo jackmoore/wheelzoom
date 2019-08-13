@@ -1,7 +1,7 @@
 {
 	"name": "wheelzoom",
 	"description": "Zoom IMG elements on mousewheel or touchpad scroll.",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"keywords": [
 		"zoom",
 		"images",
