@@ -69,8 +69,8 @@ window.wheelzoom = (function(){
 				deltaY = -e.wheelDelta;
 			}
 
-            var offset = getCursorPosition(e);
-            var bgRatio = getCursorRatio(offset);
+			var offset = getCursorPosition(e);
+			var bgRatio = getCursorRatio(offset);
 
 			// Update the bg size:
 			if (deltaY < 0) {
@@ -99,63 +99,67 @@ window.wheelzoom = (function(){
 		}
 
 		function multiply(e) {
-            multiplier = settings.maxMultiplier < multiplier ? 1 : multiplier + 1;
+			if(previousEvent.type === 'mousemove') {
+				return;
+			}
 
-            var offset = getCursorPosition(e);
-            var bgRatio = getCursorRatio(offset);
+			multiplier = settings.maxMultiplier < multiplier ? 1 : multiplier + 1;
 
-            // Update the bg size:
-            bgWidth = width * multiplier;
-            bgHeight = height * multiplier;
+			var offset = getCursorPosition(e);
+			var bgRatio = getCursorRatio(offset);
 
-            if (settings.maxZoom) {
-                bgWidth = Math.min(width * settings.maxZoom, bgWidth);
-                bgHeight = Math.min(height * settings.maxZoom, bgHeight);
-            }
+			// Update the bg size:
+			bgWidth = width * multiplier;
+			bgHeight = height * multiplier;
 
-            // Take the percent offset and apply it to the new size:
-            bgPosX = offset.X - (bgWidth * bgRatio.X);
-            bgPosY = offset.Y - (bgHeight * bgRatio.Y);
+			if (settings.maxZoom) {
+				bgWidth = Math.min(width * settings.maxZoom, bgWidth);
+				bgHeight = Math.min(height * settings.maxZoom, bgHeight);
+			}
 
-            // Prevent zooming out beyond the starting size
-            if (bgWidth <= width || bgHeight <= height) {
-                reset();
-            } else {
-                updateBgStyle();
-            }
-        }
+			// Take the percent offset and apply it to the new size:
+			bgPosX = offset.X - (bgWidth * bgRatio.X);
+			bgPosY = offset.Y - (bgHeight * bgRatio.Y);
 
-        // Use the previous offset to get the percent offset between the bg edge and cursor:
-        function getCursorRatio(offset) {
+			// Prevent zooming out beyond the starting size
+			if (bgWidth <= width || bgHeight <= height) {
+				reset();
+			} else {
+				updateBgStyle();
+			}
+		}
+
+		// Use the previous offset to get the percent offset between the bg edge and cursor:
+		function getCursorRatio(offset) {
 			var bgCursor = getCursorOffset(offset);
 
-            return {
-                X: bgCursor.X / bgWidth,
-                Y: bgCursor.Y / bgHeight
-            }
-        }
+			return {
+				X: bgCursor.X / bgWidth,
+				Y: bgCursor.Y / bgHeight
+			}
+		}
 
-        // Record the offset between the bg edge and cursor:
-        function getCursorOffset(offset) {
-            return {
-                X: offset.X - bgPosX,
-                Y: offset.Y - bgPosY
-            };
-        }
+		// Record the offset between the bg edge and cursor:
+		function getCursorOffset(offset) {
+			return {
+				X: offset.X - bgPosX,
+				Y: offset.Y - bgPosY
+			};
+		}
 
-        // As far as I know, there is no good cross-browser way to get the cursor position relative to the event target.
-        // We have to calculate the target element's position relative to the document, and subtrack that from the
-        // cursor's position relative to the document.
-        function getCursorPosition(e) {
-            var rect = img.getBoundingClientRect();
-            var offsetX = e.pageX - rect.left - window.pageXOffset;
-            var offsetY = e.pageY - rect.top - window.pageYOffset;
+		// As far as I know, there is no good cross-browser way to get the cursor position relative to the event target.
+		// We have to calculate the target element's position relative to the document, and subtrack that from the
+		// cursor's position relative to the document.
+		function getCursorPosition(e) {
+			var rect = img.getBoundingClientRect();
+			var offsetX = e.pageX - rect.left - window.pageXOffset;
+			var offsetY = e.pageY - rect.top - window.pageYOffset;
 
-            return {
-                X: offsetX,
-                Y: offsetY
-            }
-        }
+			return {
+				X: offsetX,
+				Y: offsetY
+			}
+		}
 
 		function drag(e) {
 			e.preventDefault();
