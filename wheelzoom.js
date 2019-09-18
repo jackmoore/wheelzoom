@@ -194,9 +194,9 @@ window.wheelzoom = (function(){
 	} else {
 		return function(elements, options) {
 			if (elements && elements.length) {
-                Array.prototype.forEach.call(elements, function (node) {
-                    main(node, options);
-                });
+				Array.prototype.forEach.call(elements, function (node) {
+					main(node, options);
+				});
 			} else if (elements && elements.nodeName) {
 				main(elements, options);
 			}
