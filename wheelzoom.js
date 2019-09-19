@@ -10,6 +10,7 @@ window.wheelzoom = (function(){
 		initialZoom: 1,
 		initialX: 0.5,
 		initialY: 0.5,
+		maxMultiplier: 3,
 	};
 
 	var main = function(img, options){
@@ -24,6 +25,7 @@ window.wheelzoom = (function(){
 		var bgPosY;
 		var previousEvent;
 		var transparentSpaceFiller;
+		var multiplier = 1;
 
 		function setSrcToBackground(img) {
 			img.style.backgroundRepeat = 'no-repeat';
@@ -67,20 +69,8 @@ window.wheelzoom = (function(){
 				deltaY = -e.wheelDelta;
 			}
 
-			// As far as I know, there is no good cross-browser way to get the cursor position relative to the event target.
-			// We have to calculate the target element's position relative to the document, and subtrack that from the
-			// cursor's position relative to the document.
-			var rect = img.getBoundingClientRect();
-			var offsetX = e.pageX - rect.left - window.pageXOffset;
-			var offsetY = e.pageY - rect.top - window.pageYOffset;
-
-			// Record the offset between the bg edge and cursor:
-			var bgCursorX = offsetX - bgPosX;
-			var bgCursorY = offsetY - bgPosY;
-			
-			// Use the previous offset to get the percent offset between the bg edge and cursor:
-			var bgRatioX = bgCursorX/bgWidth;
-			var bgRatioY = bgCursorY/bgHeight;
+			var offset = getCursorPosition(e);
+			var bgRatio = getCursorRatio(offset);
 
 			// Update the bg size:
 			if (deltaY < 0) {
@@ -97,14 +87,77 @@ window.wheelzoom = (function(){
 			}
 
 			// Take the percent offset and apply it to the new size:
-			bgPosX = offsetX - (bgWidth * bgRatioX);
-			bgPosY = offsetY - (bgHeight * bgRatioY);
+			bgPosX = offset.X - (bgWidth * bgRatio.X);
+			bgPosY = offset.Y - (bgHeight * bgRatio.Y);
 
 			// Prevent zooming out beyond the starting size
 			if (bgWidth <= width || bgHeight <= height) {
 				reset();
 			} else {
 				updateBgStyle();
+			}
+		}
+
+		function multiply(e) {
+			if(previousEvent.type === 'mousemove') {
+				return;
+			}
+
+			multiplier = settings.maxMultiplier < multiplier ? 1 : multiplier + 1;
+
+			var offset = getCursorPosition(e);
+			var bgRatio = getCursorRatio(offset);
+
+			// Update the bg size:
+			bgWidth = width * multiplier;
+			bgHeight = height * multiplier;
+
+			if (settings.maxZoom) {
+				bgWidth = Math.min(width * settings.maxZoom, bgWidth);
+				bgHeight = Math.min(height * settings.maxZoom, bgHeight);
+			}
+
+			// Take the percent offset and apply it to the new size:
+			bgPosX = offset.X - (bgWidth * bgRatio.X);
+			bgPosY = offset.Y - (bgHeight * bgRatio.Y);
+
+			// Prevent zooming out beyond the starting size
+			if (bgWidth <= width || bgHeight <= height) {
+				reset();
+			} else {
+				updateBgStyle();
+			}
+		}
+
+		// Use the previous offset to get the percent offset between the bg edge and cursor:
+		function getCursorRatio(offset) {
+			var bgCursor = getCursorOffset(offset);
+
+			return {
+				X: bgCursor.X / bgWidth,
+				Y: bgCursor.Y / bgHeight
+			}
+		}
+
+		// Record the offset between the bg edge and cursor:
+		function getCursorOffset(offset) {
+			return {
+				X: offset.X - bgPosX,
+				Y: offset.Y - bgPosY
+			};
+		}
+
+		// As far as I know, there is no good cross-browser way to get the cursor position relative to the event target.
+		// We have to calculate the target element's position relative to the document, and subtrack that from the
+		// cursor's position relative to the document.
+		function getCursorPosition(e) {
+			var rect = img.getBoundingClientRect();
+			var offsetX = e.pageX - rect.left - window.pageXOffset;
+			var offsetY = e.pageY - rect.top - window.pageYOffset;
+
+			return {
+				X: offsetX,
+				Y: offsetY
 			}
 		}
 
@@ -151,6 +204,7 @@ window.wheelzoom = (function(){
 
 			img.addEventListener('wheel', onwheel);
 			img.addEventListener('mousedown', draggable);
+			img.addEventListener('click', multiply);
 		}
 
 		var destroy = function (originalProperties) {
